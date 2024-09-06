@@ -8,4 +8,12 @@ public class QueryString {
         this.key = key;
         this.value = value;
     }
+
+    public boolean exists(String key) {
+        return this.key.equals(key);
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
