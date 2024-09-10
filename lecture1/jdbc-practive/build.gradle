@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // JDBC
+    implementation 'com.zaxxer:HikariCP:5.1.0' // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
+    implementation 'org.springframework:spring-jdbc:5.3.22' // https://mvnrepository.com/artifact/org.springframework/spring-jdbc
+
+    // DB
+    testImplementation 'com.h2database:h2:2.1.214' // https://mvnrepository.com/artifact/com.h2database/h2
+
+    // test
+    testImplementation 'org.assertj:assertj-core:3.24.2' // https://mvnrepository.com/artifact/org.assertj/assertj-core
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
