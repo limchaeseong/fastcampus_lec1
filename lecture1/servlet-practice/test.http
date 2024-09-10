@@ -1,0 +1,11 @@
+### GET request to example server
+GET http://localhost:8080/calculate?operand1=20&operator=-&operand2=10
+
+###
+GET http://localhost:8080/generic/calculate?operand1=30&operator=/&operand2=10
+
+###
+GET http://localhost:8080/http/calculate?operand1=40&operator=*&operand2=10
+
+### URL 인코딩 : +는 예약어이므로 그대로 사용할 수 없음 => 인코딩 된 값인 %2b 사용
+GET http://localhost:8080/http/calculate?operand1=40&operator=%2b&operand2=10
