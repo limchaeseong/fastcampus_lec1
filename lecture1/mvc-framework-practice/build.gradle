@@ -11,9 +11,16 @@ repositories {
 
 dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3' // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    implementation 'javax.servlet:javax.servlet-api:4.0.1' // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
     implementation 'org.reflections:reflections:0.10.2' // https://mvnrepository.com/artifact/org.reflections/reflections
     testImplementation 'org.assertj:assertj-core:3.26.3' // https://mvnrepository.com/artifact/org.assertj/assertj-core
+
+    // tomcat
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.42' // https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.42' // https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
+
+    // servlet
+    implementation 'javax.servlet:jstl:1.2'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1' // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
