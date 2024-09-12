@@ -1,18 +1,16 @@
 package org.example.mvc.controller;
 
+import org.example.mvc.annotation.Controller;
+import org.example.mvc.annotation.RequestMapping;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ForwardController implements Controller {
+@Controller
+public class ForwardController{
 
-    private final String uriPath;
-
-    public ForwardController(String uriPath) {
-        this.uriPath = uriPath;
-    }
-
-    @Override
+    @RequestMapping(value="/user/form", method = RequestMethod.GET)
     public String handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        return uriPath;
+        return "/user/form.jsp";
     }
 }

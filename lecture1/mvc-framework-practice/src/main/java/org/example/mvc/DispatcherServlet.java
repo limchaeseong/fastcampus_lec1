@@ -1,5 +1,6 @@
 package org.example.mvc;
 
+import org.example.mvc.controller.RequestMethod;
 import org.example.mvc.view.JspViewResolver;
 import org.example.mvc.view.ModelAndView;
 import org.example.mvc.view.View;
@@ -30,36 +31,42 @@ public class DispatcherServlet extends HttpServlet {
         RequestMappingHandlerMapping rmhm = new RequestMappingHandlerMapping();
         rmhm.init();
 
-        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping();
+        AnnotationHandlerMapping ahm = new AnnotationHandlerMapping("org.example");
+        ahm.initialize();
 
         handlerMappings = List.of(rmhm, ahm);
-        handlerAdapters = List.of(new SimpleControllerHandlerAdapter());
+        handlerAdapters = List.of(new SimpleControllerHandlerAdapter(), new AnnotationHandlerAdapter());
         viewResolvers = Collections.singletonList(new JspViewResolver());
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("[DispatcherServlet] service stared");
-        log.info("{} {}",request.getMethod(), request.getRequestURI());
+
+        String requestURI = request.getRequestURI();
+        RequestMethod requestMethod = RequestMethod.valueOf(request.getMethod());
+        log.info("{} {}", requestMethod.name(), requestURI);
         try {
-            Object handler = handlerMappings.findHandler(new HandlerKey(RequestMethod.valueOf(request.getMethod()), request.getRequestURI()));
+            Object handler = handlerMappings.stream()
+                    .filter(hm -> hm.findHandler(new HandlerKey(requestMethod, requestURI)) != null)
+                    .map(hm -> hm.findHandler(new HandlerKey(requestMethod, requestURI)))
+                    .findFirst()
+                    .orElseThrow(() -> new ServletException("No handler found for [" + requestMethod + " , " + requestURI + "]"));
 
             // HandlerAdapter로 리팩토링
             // String viewName = handler.handleRequest(request,response);
-
             HandlerAdapter handlerAdapter = handlerAdapters.stream()
-                    .filter(ha ->ha.supports(handler))
+                    .filter(ha -> ha.supports(handler))
                     .findFirst()
                     .orElseThrow(() -> new ServletException("No Adapter for handler [" + handler + "]"));
-
             ModelAndView modelAndView = handlerAdapter.handle(request, response, handler);
 
             // View 패키지로 리팩토링
             // RequestDispatcher requestDispatcher= request.getRequestDispatcher(viewName);
             // requestDispatcher.forward(request,response);
-            for(ViewResolver viewResolver : viewResolvers) {
+            for (ViewResolver viewResolver : viewResolvers) {
                 View view = viewResolver.resolveView(modelAndView.getViewName());
-                view.render(modelAndView.getModel(),request, response);
+                view.render(modelAndView.getModel(), request, response);
             }
         } catch (Exception e) {
             log.error("exception occured : [{}]", e.getMessage(), e);
